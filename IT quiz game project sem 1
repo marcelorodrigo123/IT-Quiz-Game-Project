@@ -1,0 +1,430 @@
+import time
+import random
+import sys
+from time import sleep
+from idlecolors import *
+
+def print_slow(s):
+  for c in s +'\n':
+    sys.stdout.write(c)
+    sys.stdout.flush()
+    sleep(0.00)
+def display(current_level):
+    if player_hints > 0:
+        print(f"Congratulations! You completed level {current_level}")
+    else:
+        print("Sorry you did not complete the level!")
+
+def proceed():
+    while current_level < max_level:  # Check if it's not the last level
+        choice = input("Do you want to proceed to the next level (1) or return to the game menu (2)? ")
+        if choice == "1":
+            if not game_over:
+            # Proceed to the next level
+              return True  # This will go to the next iteration of the level loop
+            else:
+              return False
+        elif choice == "2":
+            # Return to the game menu
+            break   # Exit the level loop and return to the main menu
+        else:
+            time.sleep(0.5)
+            printc(red("Please select a valid option!"))
+
+# Initialize player data
+player_name = ""
+player_points = 0  # Set the initial score to 0
+max_level = 5
+saved_score = ""
+game_over = False
+
+# Define questions and answers for each level in a combined dictionary
+questions_and_answers = {
+    1: [
+        {
+            "question": "What does RAM stands for?",
+            "answer": "Random Access Memory"
+        },
+        {
+            "question": "What does HTML stands for?",
+            "answer": "HyperText Markup Language"
+        },
+        {
+            "question": "What does VPN stands for? ",
+            "answer": "Virtual Private Network"
+        },
+        {
+            "question": "What does DNS stands for?",
+            "answer": "Domain Name System"
+        },
+        {
+            "question": " What does CPU stands for? ",
+            "answer": "Central processing Unit"
+        },
+        {
+            "question": "What does URL stands for?",
+            "answer": "Uniform Resource Locator"
+        },
+        {
+            "question": "It is the one who created the apps and websites? ",
+            "answer": "Programmer"
+        },
+        {
+            "question": "It is used by the programmer to build apps? ",
+            "answer": "Programming language"
+        },
+        {
+            "question":
+            " It is an interpreted, object-oriented, high-level programming language with dynamic semantics",
+            "answer": "Python"
+        },
+        {
+            "question":
+            "a scripting language for creating dynamic web page content.",
+            "answer": "Javascript"
+        },
+    ],
+    2: [
+        {
+            "question":
+            "Which computer component is responsible for storing data long-term, even when the computer is powered off?",
+            "answer": "Hard Drive"
+        },
+        {
+            "question":
+            "Which software application is commonly used for creating and editing documents",
+            "answer": "Microsoft Word"
+        },
+        {
+            "question":
+            "Which term describes a malicious software program designed to disrupt or damage a computer system?",
+            "answer": "Malware"
+        },
+        {
+            "question": "What does Wi-Fi stands for?",
+            "answer": "Wireless Fidelity"
+        },
+        {
+            "question": "What is the correct file extension for Python files?",
+            "answer": ".py"
+        },
+        {
+            "question":
+            "What do you call a piece of software that helps prevent, detect, and remove malicious software from a computer?",
+            "answer": "Antivirus"
+        },
+        {
+            "question": "What is the output of the expression : 3*1**3",
+            "answer": "3"
+        },
+        {
+            "question": "A state that is used to create a function",
+            "answer": "def"
+        },
+        {
+            "question": "What statement is used to stop a loop?",
+            "answer": "break"
+        },
+        {
+            "question":
+            "What data type is the object below ? L = [1, 23, ‘hello’, 1]",
+            "answer": "list"
+        },
+    ],
+    3: [
+        {
+            "question":
+            "what method can be used to remove any whitespace from both the beginning and the end of a string? ",
+            "answer": "strip"
+        },
+        {
+            "question": " if (4!=5) or (2>3):(True/False)",
+            "answer": "True"
+        },
+        {
+            "question": " what is True if operand is false",
+            "answer": "or"
+        },
+        {
+            "question": "if both the operands are true",
+            "answer": "and"
+        },
+        {
+            "question":
+            "What function is used to get the length of a list or any iterable in Python?",
+            "answer": "Len"
+        },
+        {
+            "question":
+            "Which built-in function in Python is used to sort a list?",
+            "answer": "Sorted"
+        },
+        {
+            "question":
+            "What is the operator used for exponentiation in Python",
+            "answer": "**"
+        },
+        {
+            "question":
+            "What does the '%' symbol represent in string formatting in Python?",
+            "answer": "Modulus"
+        },
+        {
+            "question":
+            "What is the term for a function defined inside another function in Python?",
+            "answer": "Nested Function"
+        },
+        {
+            "question":
+            "What method is used to add an item to the end of a list in Python?",
+            "answer": "Append"
+        },
+    ],
+    4: [
+        {
+            "question":
+            "What is the result of the expression 5 > 3 and 10 < 20 in Python?",
+            "answer": "True"
+        },
+        {
+            "question":
+            "Which method is used to remove and return an element from a set in Python?",
+            "answer": "pop"
+        },
+        {
+            "question":
+            "What does the 'self' keyword represent in a Python class method?",
+            "answer": "Instance"
+        },
+        {
+            "question":
+            "What is the output of print(list(range(5))[::-1]) in Python?",
+            "answer": "['4', '3', '2', '1', '0']"
+        },
+        {
+            "question": "What is the result of 2 * 3 * 2 in Python?",
+            "answer": "512"
+        },
+        {
+            "question":
+            "Which sorting algorithm has an average-case time complexity of O(n log n)?",
+            "answer": "Merge sort"
+        },
+        {
+            "question":
+            "What is the output of print('Hello, World!'[-1]) in Python?",
+            "answer": "'!'"
+        },
+        {
+            "question":
+            "What is the term for a function that calls itself in Python?",
+            "answer": "Recursion"
+        },
+        {
+            "question": "What does the str method do in Python?",
+            "answer": "String representation"
+        },
+        {
+            "question":
+            "What is the process of wrapping data and functions into a single unit known as?",
+            "answer": "Encapsulation"
+        },
+    ],
+    5: [
+        {
+            "question":
+            "What does the len() function return for an empty dictionary?",
+            "answer": "0"
+        },
+        {
+            "question": "What is the result of Python[::-1]?",
+            "answer": "nohtyP"
+        },
+        {
+            "question": "Question 5:* What is the output of 2 ** 3?",
+            "answer": "8"
+        },
+        {
+            "question":
+            "Which keyword is used for defining a constant variable in Python?",
+            "answer": "HelloWorld"
+        },
+        {
+            "question": "What is the result of 3 * 5 in Python?",
+            "answer": "15"
+        },
+        {
+            "question": "What does the range() function generate?",
+            "answer": "sequence"
+        },
+        {
+            "question":
+            "What is the default delimiter for the split() method?",
+            "answer": "space"
+        },
+        {
+            "question":
+            "Which function is used to obtain the absolute value of a number?",
+            "answer": "abs"
+        },
+        {
+            "question": "What is the output of 5 // 2?",
+            "answer": "2"
+        },
+        {
+            "question": "What symbol is used for comments in Python?",
+            "answer": "#"
+        },
+    ]
+}
+
+# Define points for each level
+level_points = {
+    1: 10,
+    2: 15,
+    3: 20,
+    4: 25,
+    5: 30,
+}
+
+# High scores list (initially empty)
+high_scores = []
+max_hint = 5
+level_question = 10
+
+# Total score
+total_score = 0
+# Main menu
+while True:
+    printc(randcol("                      |===================================|"))
+    printc(orange("                      |   Welcome To KAKASA KABA SA IT!   |"))
+    printc(randcol("                      |===================================|"))
+    time.sleep(0.5)
+    print_slow("                                   GAME MENU")
+    time.sleep(0.5)
+    printc(black("                       1.") + green("Start New Game"))
+    time.sleep(0.5)
+    printc(black("                       2.") + blue("View Saved Scores"))
+    time.sleep(0.5)
+    printc(black("                       3.") + red("Quit"))
+    time.sleep(0.5)
+
+    choice = input("                       Enter your choice: ")
+
+    if choice == "1":
+        # Start Game
+        player_name = input("Enter your name: ")
+        player_hints = 5
+        passed_levels = []  # List to track passed levels
+
+        for current_level in range(1, max_level + 1):
+            player_points = 0  # Reset the score to 0 at the start of each level
+            question_answered = False  # Flag to track if the question was answered
+            level_questions = questions_and_answers[current_level]
+            random.shuffle(level_questions)
+
+            for i, qa in enumerate(level_questions):
+                while player_hints > 0:  # Repeat until the player runs out of hints
+                    printc(red(
+                        "====================") + randcol("=================") + orange("==========================="
+                    ))
+
+                    print_slow(f"Level {current_level}")
+                    time.sleep(1)
+
+                    printc(red(
+                        "====================") + randcol("=================") + orange("==========================="
+                    ))
+
+                    print_slow(f"Question {i + 1}: {qa['question']}")
+                    printc(red(
+                        "====================") + randcol("=================") + orange("==========================="
+                    ))
+                    player_answer = input("Your answer: ")
+
+                    if player_answer.lower() == qa['answer'].lower():
+                        player_points += player_hints + level_points[current_level]
+                        printc(green("You gained points"))
+                        print("You have", player_points, "points")
+                        printc(red(
+                            "====================") + randcol("=================") + orange("==========================="
+                        ))
+                        question_answered = True  # The question is answered
+                        if player_hints == max_hint:
+                            printc(green("You gained a hint"))
+                            print("Correct! you have reached ", player_hints, " maximum hints reached.")
+                        else:
+                            player_hints += 1
+                            printc(green("The word is correct!"))
+                            print("You gained", player_hints, " hint.")
+                        break  # Exit the answer loop
+                    else:
+                        printc(red("Incorrect. You lost a hint."))
+                        player_hints -= 1
+                        if player_hints > 0:
+                            print("You have", player_hints, "remaining")
+                            scrambled_hint = ''.join(random.sample(qa['answer'], len(qa['answer'])))
+                            printc(orange("Hint Acquired"))
+                            print("Here's a hint (", scrambled_hint, ")")
+                        else:
+                            printc(red("You run out of hints!"))
+                if not question_answered:
+                    time.sleep(0.5)
+                    print(
+                        f"Game over on Level {current_level}! Your final score is {player_points}"
+                    )
+                    game_over = True
+                    break  # Game over for the current level
+
+            if question_answered:
+                # This block is executed if the inner loop does NOT break (i.e., all questions answered)
+                time.sleep(0.5)
+                passed_levels.append(current_level)
+                total_score += player_points
+
+            # Check if the player wants to proceed to the next level
+            if not proceed() and game_over:
+                break  # Exit the level loop
+
+            if passed_levels:
+                display(current_level)  # Display the congratulations message
+                print(
+                    f"Congratulations, {player_name}! You gained points on level {', '.join(map(str, passed_levels))} with {total_score} points."
+                )
+                printc(green("Kumasa ka sa IT"))
+            else:
+                time.sleep(0.5)
+                print_slow(
+                    f"Sorry, {player_name}. You did not pass any levels. Game over!")
+                printc(red("Hindi ka kumasa sa IT :<"))
+
+            if all(level in passed_levels for level in range(1, max_level + 1)):
+                time.sleep(0.5)
+                print_slow("Congratulations, you have completed all levels!")
+                print(f"Your final score is {total_score}.")
+                printc(green("Kumasa ka sa IT"))
+            else:
+                time.sleep(0.5)
+                print(f"Your  score, {player_name}, is {total_score}")
+
+      high_scores.append((player_name, total_score))
+      total_score = 0  # Reset total score for the next player
+
+    elif choice == "2":
+      # View Saved Scores
+      time.sleep(0.5)
+      printc(orange("High Scores:"))
+      n_scores = sorted(high_scores, key=lambda x: x[1], reverse=True)[:10]
+      for i, (name, score) in enumerate(high_scores):
+        time.sleep(0.5)
+        print_slow(f"{i + 1}. {name}: {score}")
+
+    elif choice == "3":
+      # Quit the game
+      time.sleep(0.5)
+      print_slow("THANK YOU FOR PLAYING!")
+      break
+
+    else:
+      time.sleep(0.5)
+      printc(red("Please select a valid option!"))
